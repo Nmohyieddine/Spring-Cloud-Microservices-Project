@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 
 @SpringBootApplication
 public class CustumerApplication {
@@ -21,5 +22,12 @@ public class CustumerApplication {
             customerRepository.save(new Customer(null,"khalileljoulali","khalileljoulali@gmail.com"));
             customerRepository.findAll().forEach(System.out::println);
         };
+    }
+    @Bean
+    public RepositoryRestConfigurer repositoryRestConfigurer()
+    {
+        return RepositoryRestConfigurer.withConfig(config -> {
+            config.exposeIdsFor(Customer.class);
+        });
     }
 }

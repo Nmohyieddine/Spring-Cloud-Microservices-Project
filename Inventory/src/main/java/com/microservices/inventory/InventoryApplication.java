@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 
 @SpringBootApplication
 public class InventoryApplication {
@@ -13,16 +14,24 @@ public class InventoryApplication {
     }
 
     @Bean
-    CommandLineRunner start(InventoryRepository inventoryRepository){
+    CommandLineRunner start(ProductRepository productRepository){
         return args -> {
 
-            inventoryRepository.save(new Inventory(null,"prod1",2000));
-            inventoryRepository.save(new Inventory(null,"prod2",2500));
-            inventoryRepository.save(new Inventory(null,"prod3",3000));
-            inventoryRepository.findAll().forEach(System.out::println);
+            productRepository.save(new Product(null,"prod1",2000));
+            productRepository.save(new Product(null,"prod2",2500));
+            productRepository.save(new Product(null,"prod3",3000));
+            productRepository.findAll().forEach(System.out::println);
 
 
         };
+    }
+
+    @Bean
+    public RepositoryRestConfigurer repositoryRestConfigurer()
+    {
+        return RepositoryRestConfigurer.withConfig(config -> {
+            config.exposeIdsFor(Product.class);
+        });
     }
 
 }

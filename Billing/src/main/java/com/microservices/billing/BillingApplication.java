@@ -1,6 +1,5 @@
 package com.microservices.billing;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,14 +18,14 @@ public class BillingApplication {
     }
 
     @Bean
-    CommandLineRunner start(BillingRepository billingRepository,ProductRepository productRepository,CustomerService customerService){
+    CommandLineRunner start(BillingRepository billingRepository,
+                            ProductItemRepository productItemRepository,
+                            CustomerService customerService,
+                            InventoryService inventoryService){
         return args -> {
 
 
 
-            Bill bill= billingRepository.save(new Bill(null,new Date(),1L,null));
-            productRepository.save(new ProductItem(null,1L,800,3,bill));
-            productRepository.save(new ProductItem(null,2L,1000,1,bill));
 
             Customer customer =customerService.findCustomerById(1L);
             System.out.println("**********************");
@@ -35,6 +34,23 @@ public class BillingApplication {
                 System.out.println(customer.getEmail());
 
             System.out.println("**********************");
+
+
+
+
+
+
+            Bill bill= billingRepository.save(new Bill(null,new Date(),customer.getId(),null,null));
+            inventoryService.getAllProduct().getContent().forEach(prod -> {
+                productItemRepository.save(new ProductItem(null,prod.getId(),null,800,3,bill));
+
+                System.out.println("**********************");
+                System.out.println(prod.getId());
+                System.out.println(prod.getName());
+                System.out.println(prod.getPrice());
+
+                System.out.println("**********************");
+            });
         };
     }
 }

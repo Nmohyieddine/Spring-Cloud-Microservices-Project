@@ -11,7 +11,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data @AllArgsConstructor @NoArgsConstructor
-public class Inventory {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
